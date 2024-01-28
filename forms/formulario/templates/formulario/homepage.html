@@ -1,0 +1,22 @@
+<h3>Formulário</h3>
+<hr>
+<h1>Os requisitos/necessidades foram identificados e validados com os usuários? </h1>
+<form action="" method="post">
+    {% csrf_token %}
+    <p>
+        <label for="id_opcao_0"><input type="radio" id="id_opcao_0" name="opcao" value="A"> Opção A: Nenhum dos requisitos/necessidades foram identificados e validados com os usuários</label>
+    </p>
+    <p>
+        <label for="id_opcao_1"><input type="radio" id="id_opcao_1" name="opcao" value="B"> Opção B: Alguns dos requisitos/necessidades foram identificados e validados com os usuários (30%)</label>
+    </p>
+    <p>
+        <label for="id_opcao_2"><input type="radio" id="id_opcao_2" name="opcao" value="C"> Opção C: A maior parte dos requisitos/necessidades foram identificados e validados com os usuários (70%)</label>
+    </p>
+    <p>
+        <label for="id_opcao_3"><input type="radio" id="id_opcao_3" name="opcao" value="D"> Opção D: Todos os requisitos/necessidades foram identificados e validados com os usuários</label>
+    </p>
+    <p>
+        <label for="id_opcao_4"><input type="radio" id="id_opcao_4" name="opcao" value="E"> Opção E: Foram levantados e validados requisitos/necessidades além dos inicialmente solicitados, agregando valor ao projeto.</label>
+    </p>
+    <input type="submit" value="Submit">
+</form>
