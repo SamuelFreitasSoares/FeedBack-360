@@ -1,5 +1,14 @@
 from django.db import models
 
+class Aluno(models.Model):
+    nome = models.CharField(max_length=100)
+    matricula = models.IntegerField()
+    curso = models.CharField(max_length=3)
+    periodo = models.IntegerField()
+
+    def __str__(self):
+        return self.nome
+
 class Q1(models.Model):
     OPCOES = [
         ('1', 'Nenhum dos  requisitos/necessidades foram identificados e validados com os usuários'),

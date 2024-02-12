@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from formulario import views
+from professores import views
 
 urlpatterns = [
     path('', views.home, name="home"),
     path('saida/', views.saida, name="saida"),
     path('admin/', admin.site.urls),
+    path('professores/', views.home, name="professores"),
 ]
