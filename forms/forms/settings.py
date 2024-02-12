@@ -38,8 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'formulario.apps.FormularioConfig',
+<<<<<<< HEAD
     'professores.apps.ProfessoresConfig',
     'crispy_forms',
+=======
+>>>>>>> c7c59203042d48558332deb53dbcce5b02fb45cc
 ]
 
 MIDDLEWARE = [
