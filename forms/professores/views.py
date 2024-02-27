@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .form_page import QuestionForm
 
-# Create your views here.
 def home(request):
-    return render(request, 'professores/home.html')
+    form = QuestionForm()
+    return render(request, 'professores/home.html', {'form': form})
 
 def saida(request):
     return HttpResponse('Saida')
