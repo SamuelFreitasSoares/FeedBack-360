@@ -1,17 +1,15 @@
 from django.db import models
-<<<<<<< HEAD
 from formulario import models as form
 # Create your models here.
-=======
 from django.contrib.auth.models import User
 
 class Question(models.Model):
-    text = models.CharField(max_length=255)
-    option1 = models.CharField(max_length=100)
-    option2 = models.CharField(max_length=100)
-    option3 = models.CharField(max_length=100)
-    option4 = models.CharField(max_length=100)
-    option5 = models.CharField(max_length=100)
+    text = models.CharField(max_length=550)
+    option1 = models.CharField(max_length=500)
+    option2 = models.CharField(max_length=500)
+    option3 = models.CharField(max_length=500)
+    option4 = models.CharField(max_length=500)
+    option5 = models.CharField(max_length=500)
 
     def __str__(self):
         return self.text
@@ -22,4 +20,8 @@ class Form(models.Model):
 
     def __str__(self):
         return f"Formulário do Professor {self.professor.username}"
->>>>>>> 15f4e41a17e8cf4c0aee77d5e2baab0f5db24c64
+
+class Aluno(models.Model):
+    nome = models.CharField(max_length=100)
+    matricula = models.CharField(max_length=10)
+    curso = models.CharField(max_length=100)
