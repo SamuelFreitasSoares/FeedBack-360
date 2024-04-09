@@ -1,27 +1,35 @@
 from django.db import models
-from formulario import models as form
-# Create your models here.
-from django.contrib.auth.models import User
 
-class Question(models.Model):
-    text = models.CharField(max_length=550)
-    option1 = models.CharField(max_length=500)
-    option2 = models.CharField(max_length=500)
-    option3 = models.CharField(max_length=500)
-    option4 = models.CharField(max_length=500)
-    option5 = models.CharField(max_length=500)
+class Professores(models.Model):
+    nome = models.CharField(max_length=45)
+    email = models.EmailField(max_length=100)
+    disciplinas = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.text
+class Disciplinas(models.Model):
+    nome = models.CharField(max_length=45)
+    codigo = models.CharField(max_length=45)
+    turma = models.CharField(max_length=45)
+    docente = models.CharField(max_length=45)
 
-class Form(models.Model):
-    professor = models.ForeignKey(User, on_delete=models.CASCADE)
-    questions = models.ManyToManyField(Question)
+class Alunos(models.Model):
+    nome = models.CharField(max_length=45)
+    matricula = models.IntegerField()
+    email = models.EmailField(max_length=100)
+    curso = models.CharField(max_length=45)
 
-    def __str__(self):
-        return f"Formulário do Professor {self.professor.username}"
+class Tem(models.Model):
+    disciplina = models.ForeignKey(Disciplinas, on_delete=models.CASCADE)
+    aluno = models.ForeignKey(Alunos, on_delete=models.CASCADE)
 
-class Aluno(models.Model):
-    nome = models.CharField(max_length=100)
-    matricula = models.CharField(max_length=10)
-    curso = models.CharField(max_length=100)
+class Competencias(models.Model):
+    descricao = models.TextField()
+    opcao_1 = models.TextField()
+    opcao_2 = models.TextField()
+    opcao_3 = models.TextField()
+    opcao_4 = models.TextField()
+    opcao_5 = models.TextField()
+    tem = models.ForeignKey(Tem, on_delete=models.CASCADE)
+
+class Ministra(models.Model):
+    professor = models.ForeignKey(Professores, on_delete=models.CASCADE)
+    disciplina = models.ForeignKey(Disciplinas, on_delete=models.CASCADE)
