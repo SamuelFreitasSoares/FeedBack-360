@@ -1,90 +1,35 @@
 import csv
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from .models import Coordenadores, Cursos, Aluno, Disciplina, Competencias, Professores, Atividade, Turma, Nota, Turma_Aluno
-from .forms import CSVUploadForm
-from io import TextIOWrapper
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.core.files.storage import FileSystemStorage
+from .models import *
+import io
 
 def upload_csv(request):
-    if request.method == "POST":
-        form = CSVUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = form.cleaned_data['file']
-            data = TextIOWrapper(file.file, encoding='utf-8')
-            reader = csv.DictReader(data)
-            
-            for row in reader:
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
 
-                # Coordenadores
-                coordenador, created = Coordenadores.objects.get_or_create(
-                    idCoordenadores=row['idCoordenadores'],
-                    defaults={'nome': row['nome_coordenador'], 'email': row['email_coordenador']}
-                )
+        # Verifica se o arquivo é um CSV
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'O arquivo deve ser um CSV.')
+            return redirect('upload_csv')
 
-                # Cursos
-                curso, created = Cursos.objects.get_or_create(
-                    idCursos=row['idCursos'],
-                    defaults={'nome': row['nome_curso'], 'codigo': row['codigo_curso'], 'Coordenadores_idCoordenadores': coordenador}
-                )
+        # Lê o conteúdo do arquivo CSV
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)  # Pula o cabeçalho
 
-                # Aluno
-                aluno, created = Aluno.objects.get_or_create(
-                    matricula=row['matricula_aluno'],
-                    defaults={'nome': row['nome_aluno'], 'email': row['email_aluno'], 'Cursos_idCursos': curso}
-                )
+        # Processa cada linha do CSV
+        for row in csv.reader(io_string, delimiter=','):
+            nome, email = row
+            # Verifica se o aluno já existe
+            if not Aluno.objects.filter(email=email).exists():
+                Aluno.objects.create(nome=nome, email=email)
+            else:
+                messages.warning(request, f'O aluno com o email {email} já está cadastrado.')
 
-                # Disciplina
-                disciplina, created = Disciplina.objects.get_or_create(
-                    idDisciplina=row['idDisciplina'],
-                    defaults={'nome': row['nome_disciplina'], 'codigo': row['codigo_disciplina']}
-                )
+        messages.success(request, 'Alunos cadastrados com sucesso.')
+        return redirect('upload_csv')
 
-                # Competencias
-                competencia, created = Competencias.objects.get_or_create(
-                    idCompetencias=row['idCompetencias'],
-                    defaults={'descricao': row['descricao_competencia'], 'op1': row['op1'], 'op2': row['op2'], 'op3': row['op3'], 'op4': row['op4'], 'op5': row['op5']}
-                )
-
-                # Professores
-                professor, created = Professores.objects.get_or_create(
-                    idProfessores=row['idProfessores'],
-                    defaults={'nome': row['nome_professor'], 'email': row['email_professor']}
-                )
-
-                # Atividade
-                atividade, created = Atividade.objects.get_or_create(
-                    idAtividade=row['idAtividade'],
-                    defaults={'titulo': row['titulo_atividade'], 'data': row['data_atividade']}
-                )
-
-                # Turma
-                turma, created = Turma.objects.get_or_create(
-                    idTurma=row['idTurma'],
-                    defaults={'semestre': row['semestre_turma'], 'Professores_idProfessores': professor, 'Disciplina_idDisciplina': disciplina}
-                )
-
-                # Nota
-                nota, created = Nota.objects.get_or_create(
-                    idNota=row['idNota'],
-                    defaults={
-                        'nota': row['nota'],
-                        'data': row['data_nota'],
-                        'Atividade_idAtividade': atividade,
-                        'Competencias_idCompetencias': competencia,
-                        'Professores_idProfessores': professor,
-                        'Aluno_matricula': aluno
-                    }
-                )
-
-                # Turma_Aluno
-                turma_aluno, created = Turma_Aluno.objects.get_or_create(
-                    Turma_idTurma=turma,
-                    Disciplina_idDisciplina=disciplina,
-                    semestre=row['semestre'],
-                    Aluno_matricula=aluno
-                )
-
-            return HttpResponseRedirect('/success/url/')
-    else:
-        form = CSVUploadForm()
-    return render(request, 'upload.html', {'form': form})
+    return render(request, 'upload_csv.html')
+    
